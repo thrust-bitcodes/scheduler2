@@ -1,0 +1,13 @@
+{
+    "name": "scheduler2",
+    "description": "Thrustjs bitcode for scheduler",
+    "path": "lib",
+    "version": "0.0.1",
+    "author": [
+        "Cleverson Puche",
+        "Ozair Jr"
+    ],
+    "dependencies": [
+        ":./scheduler2-0.0.1.jar:"
+    ]
+}
