@@ -2,7 +2,7 @@
 
 O **scheduler2** é um *bitcode* de agendamento para o [thrustjs](https://github.com/Thrustjs/thrust).
 
-Por causa da nova versão do *thrust* que trabalha com o [GraalVM](http://graalvm.org); o **scheduler2** trabalha com configuração de *script* a ser agendado; logo, cada *script* é executado em um contexto JavaScript separado de sua aplicação principal.
+Por causa da nova versão do *thrust* que é executado com a [GraalVM](http://graalvm.org); o **scheduler2** trabalha com uma configuração de *script* a ser agendado; logo, cada *script* de uma tarefa agendada é executado em um contexto JavaScript separado de sua aplicação principal.
 
 ## Instalação
 
@@ -14,7 +14,7 @@ tpm install scheduler2
 
 ## Configuração do agendador
 
-Inicie o **scheduler2** informando a quantidade de suas *treads*. A biblioteca contém a função `.initScheduler()`; que deve ser chamada no máximo uma vez em seu *código*.
+Inicie o **scheduler2** informando a quantidade de suas *treads*. A biblioteca contém a função `.initScheduler()` a qual deve ser chamada no máximo uma vez em seu *código*.
 
 Por exemplo:
 
@@ -30,7 +30,7 @@ const scheduler = require('scheduler2')
 scheduler.initScheduler(1,5)
 ```
 
-Nós estamos iniciando o agendador com no mínimo **1** thread, e que no máximo o *pool* irá crescer com até **5** threads.
+Nós estamos iniciando o agendador com no mínimo **1** thread; e, e durante a execução das tarefas este *pool* irá crescer com até **5** threads.
 
 ## Agendando
 
@@ -49,7 +49,7 @@ Lembre-se que cada agendamento é executado pelo **scheduler2** em um contexto/t
 
 ### Agendamento por período
 
-Se para o parâmetro `time`, você informar um valor numérico inteiro; então, o agendador entende que estamos agendando uma tarefa para ser executada continuamente a cada **período** de milissegundos.
+Se para o parâmetro `time`, você informar um valor numérico inteiro; então, o agendador entende que estamos agendando uma tarefa para ser executada continuamente, sempre a cada um **período** de milissegundos.
 
 Segue um exemplo:
 
@@ -65,13 +65,13 @@ const scheduler = require('scheduler2')
 scheduler.schedule('src/tasks/task01.js', 360000, true)
 ```
 
-Temos a mesma configuração e com a diferença: o parâmetro `now` está definido como `true`. Isto significa que a tarefa do *script* será executada imediatamnente; e depois o agendador irá executá-la  a cada 6 minutos.
+Temos a mesma configuração e com a diferença: o parâmetro `now` está definido como `true`. Isto significa que a tarefa do *script* primeiro será executada por agora; e, depois o agendador irá executá-la a cada 6 minutos.
 
 ### Agendamento por hora
 
 Caso o parâmetro `time` for um *array* de strings; neste caso, o agendador entenderá que a tarefa deverá ser executada periodicamente na **hora** que foi informada.
 
-Vamos para um exemplo para entender a várias possibilidades e seus significados:
+Vejamos o exemplo a seguir para entender as várias possibilidades de agendar por hora:
 
 ```js
 const scheduler = require('scheduler2')
@@ -90,7 +90,7 @@ Estamos informando para o agendador, o seguinte:
 - O agendamento 01: Todo dia, às 08:00, o agendador irá executar a tarefa do *script* `scr/tasks/task02.js`.
 - O agendamento 02: Todo dia, às 09:15, o agendador irá executar a tarefa do *script* `scr/tasks/task03.js`.
 - O agendamento 03: Todo dia, às 10:20:45, o agendador irá executar a tarefa do *script* `scr/tasks/task04.js`.
-- O agendamento 04: Todo dia, às 09:20 e depois às 14:33, o agendador irá executar a tarefa do *script* `scr/tasks/task05.js`.
+- O agendamento 04: Todo dia, tanto às 09:20 e como às 14:33, o agendador irá executar a tarefa do *script* `scr/tasks/task05.js`.
 
 ## O *script* da tarefa
 
@@ -123,7 +123,8 @@ exports = {
 }
 ```
 
-O parâmetro de entrada `schedulerTask` contém o método/função `cancel()`, que é utlizado para cancelar a *continuidade* do agendador de executar a tarefa.
+Quanto à função exportada, o seu parâmetro de entrada `schedulerTask` é um
+objeto que contém o método/função `cancel()`, que é utilizado para cancelar a *continuidade* do agendador de executar a tarefa.
 
 Veja o exemplo [task02.js](src/test/thrust/task02.js):
 
@@ -140,5 +141,5 @@ exports = (schedulerTask) => {
 }
 ```
 
-Aqui vemos um caso em que uma tarefa é executada umas 5 vezes; e depois disto, informamos ao agendador que a
-tarefa poderá ser removida do agendador, por chamarmos a função `schedulerTask.cancel()`). Logo, a tarefa deste *script* não será mais executada pelo agendador; podendo outra tarefa ser agendada em seu lugar.
+Aqui vemos um caso em que uma tarefa é executada umas 5 vezes; e depois disto,
+informamos ao agendador que a tarefa poderá ser removida de sua _lista_ de execução, por chamarmos a função `schedulerTask.cancel()`. Logo, a tarefa deste *script* não será mais executada pelo agendador; podendo outra tarefa ser agendada em seu lugar.
